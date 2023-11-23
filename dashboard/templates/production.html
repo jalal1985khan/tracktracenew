@@ -1,0 +1,89 @@
+{% include 'head.html' %}
+    <div class="az-content pd-y-20 pd-lg-y-30 pd-xl-y-40">
+      <div class="container">
+        <div class="az-content-left az-content-left-components">
+          <div class="component-item">
+            <label>SERVER MANAGEMENT</label>
+            <nav class="nav flex-column">
+              <a href="/server/" class="nav-link">Scan Server</a>
+              <a href="/transportation/" class="nav-link">Transpotation</a>
+            </nav>
+            
+            <label>PRODUCT MANAGEMENT</label>
+            <nav class="nav flex-column">
+              <a href="/production/" class="nav-link active">Production Line ({{total_box_in}})</a>
+              <!--<a href="#" class="nav-link">Production Line-2</a>-->
+            </nav>
+
+            <label>STOCK MANAGEMENT</label>
+            <nav class="nav flex-column">
+              <a href="/in_stock/" class="nav-link">In Stock ({{total_stock_in}})</a>
+              <a href="/out_stock/" class="nav-link">Out Stock ({{total_stock_out}})</a>
+            </nav>
+       {% if request.user.profile.usertype == 'Distiller' %}
+            <!-- new added-->
+            <label>Tracing Product</label>
+            <nav class="nav flex-column">
+              <a href="/tracking_items/" class="nav-link">Tracking</a>
+            </nav>
+            <!--new ended-->
+
+                 {% endif %}
+
+            
+          </div><!-- component-item -->
+
+        </div><!-- az-content-left -->
+        <div class="az-content-body pd-lg-l-40 d-flex flex-column">
+          <div class="az-content-breadcrumb">
+            <span>PRODUCTION LINE</span>
+          </div>
+
+          <div class="az-dashboard-one-title">
+            <div>
+              <h2 class="az-dashboard-title">Production Line</h2>
+            </div>
+            
+          </div>
+
+
+          <div class="table-responsive">
+            <table class="table table-bordered mg-b-0">
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>Box Id</th>
+                  <!--<th>QR Code</th>-->
+                  <th>Brand</th>
+                  <th>Quantity</th>
+                  <th>mfg_date</th>
+                  <th>time_stemp</th>
+                  <th>date</th>
+                  <th>production_line</th>
+                  <th>system_id</th>
+                  <th>uid</th> 
+                </tr>
+              </thead>
+              <tbody>
+                {% for x in lin_1 %}
+                      <tr>
+                        <th>{{x.id}}</th>
+                        <th>{{x.box_id}}</th>
+                        <!--<th>{{x.product_qrcode}}</th>-->
+                        <th>{{x.brand}}</th>
+                        <th>{{x.quantity}}</th>
+                        <th>{{x.mfg_date}}</th>
+                        <th>{{x.time_stemp}}</th>
+                        <th>{{x.date}}</th>
+                        <th>{{x.production_line}}</th>
+                        <th>{{x.system_id}}</th>
+                        <th>{{x.uid}}</th>
+                      </tr>
+                      {% endfor%}
+              </tbody>
+            </table>
+          </div><!-- table-responsive -->
+
+
+          <div class="ht-40"></div>
+          {% include 'footer.html' %}

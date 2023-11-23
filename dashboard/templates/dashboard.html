@@ -1,0 +1,170 @@
+{% include 'head.html' %}
+<style>
+  .border-1 {
+    border: 1px solid #d2d1d1;
+    margin-bottom: 38px;
+    padding-top:12px;
+}
+</style>
+
+    <div class="az-content az-content-dashboard">
+      <div class="container">
+        <div class="az-content-body">
+          <div class="az-dashboard-one-title">
+            <div>
+              <h2 class="az-dashboard-title">Hi {{ username.profile.first_name }} {{ username.profile.last_name }}, welcome back!</h2>
+              <p class="az-dashboard-text">You are logged in as
+              {% for group in groups %}
+              {{ group.name }}
+              {% endfor %}</p>
+            </div>
+            <div class="az-content-header-right">
+              <h1>
+                {% for group in groups %}
+              {{ group.name }}
+              {% endfor %}
+              </h1>
+            </div>
+          </div><!--az-dashboard-one-title-->
+
+         
+
+          <div class="row row-sm mg-b-20">
+            {% if request.user.profile.usertype == 'Distiller' %}
+            <div class="col-sm-4 mg-t-20">
+              <div class="card card-dashboard-three">
+                <div class="card-header">
+                  <p>Total Production</p>
+                  <h6>{{total_production}} <small class="tx-success"><i class="icon ion-md-arrow-up"></i> 2.87%</small></h6>
+                  <small>The total number of sessions within the date range. It is the period time a user is actively engaged with your website, page or app, etc.</small>
+                </div><!-- card-header -->
+                <div class="card-body">
+                  <div class="chart"><canvas id="chartBar1"></canvas></div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="col-sm-4 mg-t-20">
+              <div class="card card-dashboard-three">
+                <div class="card-header">
+                  <p>Opening Balance</p>
+                  <h6> {{total_production}} <small class="tx-success"><i class="icon ion-md-arrow-up"></i> 2.87%</small></h6>
+                  <small>The total number of sessions within the date range. It is the period time a user is actively engaged with your website, page or app, etc.</small>
+                </div><!-- card-header -->
+                <div class="card-body">
+                  <div class="chart"><canvas id="chartBar1"></canvas></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4 mg-t-20">
+              <div class="card card-dashboard-three">
+                <div class="card-header">
+                  <p>Closing Balance</p>
+                  <h6>{{total_closing_balance}}<small class="tx-success"><i class="icon ion-md-arrow-up"></i> 2.87%</small></h6>
+                  <small>The total number of sessions within the date range. It is the period time a user is actively engaged with your website, page or app, etc.</small>
+                </div><!-- card-header -->
+                <div class="card-body">
+                  <div class="chart"><canvas id="chartBar1"></canvas></div>
+                </div>
+              </div>
+            </div>
+            {% if request.user.profile.usertype == 'Distributor' %}
+            <div class="col-sm-4 mg-t-20">
+              <div class="card card-dashboard-three">
+            <canvas id="myBar" style="width:100%;max-width:500px"></canvas>
+              </div></div>
+              {% endif %}
+              {% if request.user.profile.usertype == 'Retailor' %}
+              <div class="col-sm-4 mg-t-20">
+                <div class="card card-dashboard-three">
+              <canvas id="myBar" style="width:100%;max-width:500px"></canvas>
+                </div></div>
+                {% endif %}
+
+
+          </div><!-- row -->
+          {% if request.user.profile.usertype == 'Distiller' %}
+          <div class="row row-sm border-1">
+            <div class="col-sm-8 col-md-12 col-xl-6">
+              <canvas id="myChart"></canvas>
+            </div><!-- col-6 -->
+            <div class="col-sm-8 col-md-12 col-xl-6" style="text-align: -webkit-center;">
+              <canvas id="myBar" style="width:100%;max-width:500px"></canvas>
+            </div><!-- col-6 -->
+          </div>
+          {% endif %}
+
+         
+
+          {% if request.user.profile.usertype == 'Distributor' %}
+
+
+          <div class="row row-sm mg-b-20">
+            <div class="col-lg-6">
+              <div class="card card-dashboard-pageviews">
+                <div class="card-header">
+                  <h6 class="card-title">Last 5 In Stock Details as on date</h6>
+                  <p class="card-text">This report is based on 100% of sessions.</p>
+                </div><!-- card-header -->
+                <div class="card-body">
+                  {% for x,y,z in distiller %}
+
+                  <div class="az-list-item">
+                    <div>
+                      <h6>{{y}}</h6>
+                      <span>{{z}}</span>
+                    </div>
+                    <div>
+                      <h6 class="tx-primary">{{x}}</h6>
+                      <span>warehouse</span>
+                    </div>
+                  </div><!-- list-group-item -->
+         
+        {% endfor %}
+            
+                </div><!-- card-body -->
+              </div><!-- card -->
+
+            </div><!-- col -->
+            <div class="col-lg-6 mg-t-20 mg-lg-t-0">
+              <div class="card card-dashboard-pageviews">
+                <div class="card-header">
+                  <h6 class="card-title">Last 5 Out Stock Details as on date</h6>
+                  <p class="card-text">This report is based on 100% of sessions.</p>
+                </div><!-- card-header -->
+                <div class="card-body">
+
+                  {% for x,y,z in retailor %}
+
+                  <div class="az-list-item">
+                    <div>
+                      <h6>{{y}}</h6>
+                      <span>{{z}}</span>
+                    </div>
+                    <div>
+                      <h6 class="tx-primary">{{x}}</h6>
+                      <span>warehouse</span>
+                    </div>
+                  </div><!-- list-group-item -->
+         
+        {% endfor %}
+                  
+                
+            
+            
+              
+                </div><!-- card-body -->
+              </div><!-- card -->
+            </div><!-- col -->
+          </div><!-- row -->
+          {% endif %}
+        </div><!-- az-content-body -->
+      </div>
+    </div><!-- az-content -->
+
+
+
+
+
+
+    {% include 'footer.html' %}

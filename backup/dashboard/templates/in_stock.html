@@ -1,0 +1,109 @@
+{% include 'head.html' %}
+    <div class="az-content pd-y-20 pd-lg-y-30 pd-xl-y-40">
+      <div class="container">
+        <div class="az-content-left az-content-left-components">
+          <div class="component-item">
+            {% if request.user.profile.usertype == 'Distiller' %}
+            <label>SERVER MANAGEMENT</label>
+             <nav class="nav flex-column">
+              <a href="/server/" class="nav-link">Scan Server</a>
+              <a href="/transportation/" class="nav-link">Transpotation</a>
+            </nav>
+            
+            <label>PRODUCT MANAGEMENT</label>
+            <nav class="nav flex-column">
+              <a href="/production/" class="nav-link">Production Line-1</a>
+              <a href="/view_registration/" class="nav-link">Production Line-2</a>
+            </nav>
+            {% endif %}
+
+             {% if request.user.profile.usertype == 'Distributor' %}
+            <label>SERVER MANAGEMENT</label>
+            <nav class="nav flex-column">
+              <a href="/transportation/" class="nav-link">Transpotation</a>
+            </nav>
+            {% endif %}
+
+            <label>STOCK MANAGEMENT</label>
+            <nav class="nav flex-column">
+              <a href="/in_stock/" class="nav-link  active">In Stock</a>
+              <a href="/out_stock/" class="nav-link  ">Out Stock</a>
+              
+            </nav>
+            
+          </div><!-- component-item -->
+
+        </div><!-- az-content-left -->
+        <div class="az-content-body pd-lg-l-40 d-flex flex-column">
+          <div class="az-content-breadcrumb">
+            <span>Components</span>
+            <span>Tables</span>
+            <span>Basic Tables</span>
+          </div>
+          
+          <div class="az-dashboard-one-title">
+            <div>
+              <h2 class="az-dashboard-title">In Stock {{uid}}</h2>
+            </div>
+            <div class="az-content-header-right">
+              <div class="media">
+                <div class="media-body">
+                  <label>Start Date</label>
+                  <h6>Oct 10, 2023</h6>
+                </div><!-- media-body -->
+              </div><!-- media -->
+              <div class="media">
+                <div class="media-body">
+                  <label>End Date</label>
+                  <h6>Oct 23, 2023</h6>
+                </div><!-- media-body -->
+              </div><!-- media -->
+              <div class="media">
+                <div class="media-body">
+                  <label>Event Category</label>
+                  <h6>Production Lines</h6>
+                </div><!-- media-body -->
+              </div><!-- media -->
+              <a href="" class="btn btn-purple">Export</a>
+            </div>
+          </div>
+
+
+          <div class="table-responsive">
+            <table class="table table-bordered mg-b-0">
+              <thead>
+                <tr>
+                  <th>id</th>
+      <th>Box Id</th>
+      <th>QR Code</th>
+      <th>Brand</th>
+      <th>Quantity</th>
+      <th>mfg_date</th>
+      <th>Status</th>
+      <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for d_in in data_in %}
+                      <tr>
+                        <td>{{ username }}</td>
+                        <td>{{d_in.box_id}}</td>
+                        <td>{{d_in.product_qrcode}}</td>
+                        <td>{{d_in.brand}}</td>
+                        <td>{{d_in.quantity}}</td>
+                        <td>{{d_in.mfg_date}}</td>
+                        <td>{{status}}</td>
+                        
+                        
+                        <td>{{d_in.date}}</td>
+                       
+                  
+                      </tr>
+                      {% endfor%}
+              </tbody>
+            </table>
+          </div><!-- table-responsive -->
+
+
+          <div class="ht-40"></div>
+          {% include 'footer.html' %}

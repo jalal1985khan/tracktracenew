@@ -1,0 +1,28 @@
+
+
+{% if messages %}
+{% for message in messages %}
+  <!-- Toast with Placements -->
+  <div class="error">
+ {{message}}</div>
+
+<!-- Toast with Placements -->
+{% endfor%}
+{% endif %}
+
+{% if form.errors %}
+{% for field in form %}
+{% for error in form.non_field_errors %}
+{% endfor %} 
+    {% for error in field.errors %}
+    {{ error }}
+<div class="form_error">{{ error|escape }}</div>
+
+
+
+
+    {% endfor %}
+    {% endfor %}
+   
+{% endif %}    
+

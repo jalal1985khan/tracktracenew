@@ -1,0 +1,92 @@
+{% include 'head.html' %}
+  {% load static %}
+    <div class="az-content pd-y-20 pd-lg-y-30 pd-xl-y-40">
+      <div class="container">
+        <div class="az-content-left az-content-left-components">
+          <div class="component-item">
+            <label>SERVER MANAGEMENT</label>
+            <nav class="nav flex-column">
+              {% if request.user.profile.usertype == 'Distiller' %}
+              <a href="/server/" class="nav-link">Scan Server</a>
+              {% endif %}
+              <a href="/transportation/" class="nav-link">Transpotation</a>
+            </nav>
+            {% if request.user.profile.usertype == 'Distiller' %}
+            <label>PRODUCT MANAGEMENT</label>
+            <nav class="nav flex-column">
+              <a href="/production/" class="nav-link active">Production Line</a>
+              <!--<a href="#" class="nav-link">Production Line-2</a> -->
+            </nav>
+            {% endif %}
+            <label>STOCK MANAGEMENT</label>
+            <nav class="nav flex-column">
+              <a href="/in_stock/" class="nav-link">In Stock</a>
+              <a href="/out_stock/" class="nav-link">Out Stock</a>
+            </nav>
+            {% if request.user.profile.usertype != 'Retailor' %}
+            <label>Tracing Product</label>
+            <nav class="nav flex-column">
+              <a href="/tracking_items/" class="nav-link">Tracking</a>
+            </nav>
+            {% endif %}
+
+          </div><!-- component-item -->
+
+        </div><!-- az-content-left -->
+        <div class="az-content-body pd-lg-l-40 d-flex flex-column">
+          <div class="az-content-breadcrumb">
+            <span>TRACKING</span>
+          </div>
+
+          <div class="az-dashboard-one-title">
+            <div>
+              <h2 class="az-dashboard-title">Tracking </h2>
+            </div>
+            <form action = "" method = "POST">
+              {% csrf_token %}
+              <div class="az-content-header-right">
+                <div class="media">
+                  <label><span style="padding-right:10px; place-self:center;">Track by Box</span>  </label>
+                    <input name="box_id" type="text" style="border-radius:10px;">
+                </div><!-- media -->
+                <div class="media">
+                  <label><span style="padding-right:10px; place-self:center;">Track by Product </span> </label>
+                    <input type="text" name="product_id" style="border-radius:10px;">
+                </div><!-- media -->
+                <!--<a href=""  class="btn btn-purple">Track</a>-->
+                <button class="btn btn-az-primary btn-block" style="width:100px">Track</button>
+              </div>
+            </form>
+          </div>
+
+
+          <div class="table-responsive">
+            <table class="table table-bordered mg-b-0">
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>Box Id</th>
+                  <th>Product QRCode</th>
+                  <th>Distiller</th>
+                  <th>Distributor</th>
+                  <th>Retailor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                      <tr>
+                        <th>{{id}}</th>
+                        <th>{{box_id}}</th>
+                        <th>{{product_qrcode}}</th>
+                        <th>{{distiller}}</th>
+                        <th>{{distributor}}</th>
+                        <th>{{retailor}}</th>
+                        <th>{{status}}</th>
+                      </tr>
+              </tbody>
+            </table>
+          </div><!-- table-responsive -->
+
+
+          <div class="ht-40"></div>
+          {% include 'footer.html' %}

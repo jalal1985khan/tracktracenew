@@ -1,0 +1,51 @@
+{% include 'head.html' %}
+    <div class="az-content pd-y-20 pd-lg-y-30 pd-xl-y-40">
+      <div class="container">
+        <div class="az-content-left az-content-left-components">
+          <div class="component-item">
+            <label>USER MANAGEMENT</label>
+            <nav class="nav flex-column">
+              <a href="/new_registration/" class="nav-link">New Registration</a>
+              <a href="/view_registration/" class="nav-link active">View Registration</a>
+            </nav>
+           
+
+            
+          </div><!-- component-item -->
+
+        </div><!-- az-content-left -->
+        <div class="az-content-body pd-lg-l-40 d-flex flex-column">
+          <div class="az-content-breadcrumb">
+            <span>Components</span>
+            <span>Tables</span>
+            <span>Basic Tables</span>
+          </div>
+
+          <div class="az-content-label mg-b-5">view all users</div>
+          <p class="mg-b-20">Add borders on all sides of the table and cells.</p>
+
+          <div class="table-responsive">
+            <table class="table table-bordered mg-b-0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Usertype</th>
+                  <th>Status</th>
+                  <th>Registered name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for users in all_users %}
+                <tr>
+                  <th scope="row">{{ users.profile.first_name }} {{ users.profile.last_name }}</th>
+                  <td>{{ users.profile.usertype }}</td>
+                  <td>{{ users.profile.status }}</td>
+                  <td>{{ users.profile.registered_name }}</td>
+                  
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div><!-- table-responsive -->
+          <div class="ht-40"></div>
+          {% include 'footer.html' %}
