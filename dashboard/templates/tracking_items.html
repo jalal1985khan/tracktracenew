@@ -23,7 +23,7 @@
               <a href="/in_stock/" class="nav-link">In Stock</a>
               <a href="/out_stock/" class="nav-link">Out Stock</a>
             </nav>
-            {% if request.user.profile.usertype != 'Retailor' %}
+            {% if request.user.profile.usertype != 'Retailer' %}
             <label>Tracing Product</label>
             <nav class="nav flex-column">
               <a href="/tracking_items/" class="nav-link">Tracking</a>
@@ -69,7 +69,7 @@
                   <th>Product QRCode</th>
                   <th>Distiller</th>
                   <th>Distributor</th>
-                  <th>Retailor</th>
+                  <th>Retailer</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -80,7 +80,7 @@
                         <th>{{product_qrcode}}</th>
                         <th>{{distiller}}</th>
                         <th>{{distributor}}</th>
-                        <th>{{retailor}}</th>
+                        <th>{{Retailer}}</th>
                         <th>{{status}}</th>
                       </tr>
               </tbody>

@@ -37,7 +37,7 @@ def dashboard(request):
     store_records=db.store_details
     transport_records=db.transport_details
     user_records=db.user_details
-    retailor_stock_records=db.retailor_store_details
+    retailer_stock_records=db.retailer_store_details
     user_object=user_records.find_one({'uid':uid})
     box_id_in=[]
     box_id_out=[]
@@ -59,17 +59,17 @@ def dashboard(request):
                         if (data == uid and x['box_id'] not in box_id_out and x['box_id'] not in box_id_in):
                             box_id_in.append(x['box_id'])
                     box_id_in = list(set(box_id_in))
-        elif user_object['usertype']=='Retailor':
+        elif user_object['usertype']=='Retailer':
             for x in transport_records.find():
                 if x['to_user'].split(',')[-1] ==uid:
                     box_id_in.append(x['box_id'])
             print('box_id_in',box_id_in)
             for x in box_id_in:
                 print("current box",x)
-                ret_temp=retailor_stock_records.find_one({'box_id':x})
+                ret_temp=retailer_stock_records.find_one({'box_id':x})
                 if ret_temp is not None:
                     #print('hello')
-                    for x1 in retailor_stock_records.find({'box_id':x},{'_id':0}):
+                    for x1 in retailer_stock_records.find({'box_id':x},{'_id':0}):
                         
                         if x1['product_status'] == 'OUT':
                             total_product_out.append(x1['product_qrcode'])
@@ -95,7 +95,7 @@ def dashboard(request):
             total_opening_balance=len(list(set(box_id_in)))
             total_outstock_balance=len(list(set(box_id_out)))
             total_production=total_opening_balance+total_outstock_balance
-        elif user_object['usertype']=='Retailor':
+        elif user_object['usertype']=='Retailer':
             total_opening_balance=len(list(set(total_product_in)))
             total_outstock_balance=len(list(set(total_product_out)))
             total_production=total_opening_balance+total_outstock_balance
@@ -106,13 +106,13 @@ def dashboard(request):
     out_stock_pie=total_outstock_balance
     
     distiller_list=[]
-    retailor_list=[]
+    retailer_list=[]
     distiller_name=[]
-    retailor_name=[]
+    retailer_name=[]
     distiller_location=[]
-    retailor_location=[]
+    retailer_location=[]
     unique_distiller=[]
-    unique_retailor=[]
+    unique_retailer=[]
     total_box_dist=[]
     total_box_ret=[]
     #new date
@@ -123,25 +123,25 @@ def dashboard(request):
             if x['to_user'].split(',')[0]==uid:
                 distiller_list.append(x['from_user'].split(',')[0])
                 if x['to_user'].split(',')[-1]!=uid:
-                    retailor_list.append(x['to_user'].split(',')[-1])
-        #print(distiller_list,retailor_list)
+                    retailer_list.append(x['to_user'].split(',')[-1])
+        #print(distiller_list,retailer_list)
         unique_distiller=list(set(distiller_list))
-        unique_retailor=list(set(retailor_list))
+        unique_retailer=list(set(retailer_list))
         for x in unique_distiller:
             total_box_dist.append(distiller_list.count(x))
             data_temp=user_records.find_one({'uid':x})
             if data_temp is not None:
                 distiller_name.append(data_temp['registered_name'])
                 distiller_location.append(data_temp['Address'])
-        for x in unique_retailor:
-            total_box_ret.append(retailor_list.count(x))
+        for x in unique_retailer:
+            total_box_ret.append(retailer_list.count(x))
             data_temp = user_records.find_one({'uid': x})
             if data_temp is not None:
-                retailor_name.append(data_temp['registered_name'])
-                retailor_location.append(data_temp['Address'])
+                retailer_name.append(data_temp['registered_name'])
+                retailer_location.append(data_temp['Address'])
 
     a= zip(total_box_dist,distiller_name,distiller_location)
-    b=zip(total_box_ret,retailor_name,retailor_location)
+    b=zip(total_box_ret,retailer_name,retailer_location)
 
 
     context = {
@@ -155,8 +155,8 @@ def dashboard(request):
         'line_2':line_2,
         'total_box':total_box_dist,
         'distiller':a,
-        'retailor':b,
-        'retailor_location':retailor_location,
+        'retailer':b,
+        'retailer_location':retailer_location,
         'date': datetime.datetime.now().date()
     }
     return render(request, "dashboard.html", context)
@@ -168,7 +168,7 @@ def run_server(request):
 
 
 def run_transportation(request):
-    subprocess.Popen(['python3', 'trackandtrace/unique_last_updated_for_database_with_retailor4.py'])
+    subprocess.Popen(['python3', 'trackandtrace/unique_last_updated_for_database_with_retailer4.py'])
     return redirect('/production/')
 
 
@@ -299,7 +299,7 @@ def InStock(request):
     user_records = db.user_details
     transport_records = db.transport_details
     store_records = db.store_details
-    retailor_stock_records = db.retailor_store_details
+    retailer_stock_records = db.retailer_store_details
     db = client.get_database('track_and_trace_datahub')
     if usertype == 'Distiller':
         box_id_in = []
@@ -406,17 +406,17 @@ def InStock(request):
             'status': 'IN',
             'uid': uid
         }
-    elif usertype == 'Retailor':
-        retailor_id = uid
+    elif usertype == 'Retailer':
+        retailer_id = uid
         box_id_in = []
         product_in = []
         product_out = []
         product_in_item = []
         product_out_item = []
         for x in transport_records.find():
-            if x['to_user'].split(',')[-1] == retailor_id:
+            if x['to_user'].split(',')[-1] == retailer_id:
                 box_id_in.append(x['box_id'])
-        print(box_id_in)
+        #print(box_id_in)
         total_product = 0
         unique_boxes=[]
         unique_products=[]
@@ -424,9 +424,9 @@ def InStock(request):
         quantity = []
         mfg_date = []
         for x in box_id_in:
-            if retailor_stock_records.find_one({'box_id':x}) is not None:
+            if retailer_stock_records.find_one({'box_id':x}) is not None:
                 box_rec_data = store_records.find_one({'box_id': x})
-                for x1 in retailor_stock_records.find({'box_id':x},{'_id':0}):
+                for x1 in retailer_stock_records.find({'box_id':x},{'_id':0}):
                     if x1['product_status'] == 'OUT':
                         #product_out.append(x1['product_qrcode'])
                         product_out_item.append(x1)
@@ -441,9 +441,10 @@ def InStock(request):
                         product_in_item.append(x1)
         print('product_out', len(set(product_out)), 'product_in', len(set(product_in)))
         print(product_in_item)
-        total_box = list(set(unique_boxes))
+        total_box_in = len(list(set(unique_boxes)))
+        total_boxes=len(list(set(box_id_in)))
+        total_box_out = len(list(set(box_id_in).difference(set(unique_boxes))))
         total_product=list(set(unique_products))
-        total_boxes=len(total_box)
         total_products=len(total_product)
         context = {
             'username': username,
@@ -453,7 +454,8 @@ def InStock(request):
             'total_product': total_products,
             'total_box': total_boxes,
             'status': 'IN',
-
+            'total_box_in':total_box_in,
+            'total_box_out':total_box_out,
             'uid': uid
         }
     return render(request, 'in_stock.html', context)
@@ -476,7 +478,7 @@ def OutStock(request):
     user_records = db.user_details
     transport_records = db.transport_details
     store_records = db.store_details
-    retailor_stock_records=db.retailor_store_details
+    retailer_stock_records=db.retailer_store_details
     db = client.get_database('track_and_trace_datahub')
     if usertype == 'Distiller':
         box_id_in = []
@@ -612,15 +614,15 @@ def OutStock(request):
                 'status': 'OUT',
                 'uid': uid
             }
-    elif usertype == 'Retailor':
-        retailor_id = uid
+    elif usertype == 'Retailer':
+        retailer_id = uid
         box_id_in = []
         product_in = []
         product_out = []
         product_in_item = []
         product_out_item = []
         for x in transport_records.find():
-            if x['to_user'].split(',')[-1] == retailor_id:
+            if x['to_user'].split(',')[-1] == retailer_id:
                 box_id_in.append(x['box_id'])
         print(box_id_in)
         total_product = 0
@@ -629,11 +631,12 @@ def OutStock(request):
         brand=[]
         quantity=[]
         mfg_date=[]
+        temp_in_box=[] #to store temporary
         for x in box_id_in:
-            if retailor_stock_records.find_one({'box_id':x}) is not None:
+            if retailer_stock_records.find_one({'box_id':x}) is not None:
                 box_rec_data=store_records.find_one({'box_id':x})
                 print('box_rec_data',type(box_rec_data))
-                for x1 in retailor_stock_records.find({'box_id':x},{'_id':0}):
+                for x1 in retailer_stock_records.find({'box_id':x},{'_id':0}):
                     if x1['product_status'] == 'OUT':
                         #product_out.append(x1['product_qrcode'])
                         unique_products.append(x1['box_id'])
@@ -646,14 +649,15 @@ def OutStock(request):
                         product_out_item.append(x1)
                     else:
                         #product_in.append(x1['product_qrcode'])
-
+                        temp_in_box.append(x1['box_id'])
                         product_in_item.append(x1)
         #print('product_out', len(set(product_out)), 'product_in', len(set(product_in)))
         print(product_in_item)
         #total_box = len(box_id_in)
-        total_box = list(set(unique_boxes))
+        total_boxes=len(list(set(box_id_in)))
+        total_box_in = len(list(set(temp_in_box)))
+        total_box_out=len(list(set(box_id_in).difference(set(temp_in_box))))
         total_product = list(set(unique_products))
-        total_boxes = len(total_box)
         total_products = len(total_product)
         zip_context=zip(product_out_item,brand,quantity,mfg_date)
         context = {
@@ -663,6 +667,8 @@ def OutStock(request):
             'data_out': product_out_item,
             'total_product': total_products,
             'total_box': total_boxes,
+            'total_box_in':total_box_in,
+            'total_box_out':total_box_out,
             'status': 'OUT',
             'receiver_name': 'Customer',
             'uid': uid,
@@ -691,7 +697,7 @@ def tracking_items(request):
     user_records = db.user_details
     transport_records = db.transport_details
     store_records = db.store_details
-    retailor_stock_records = db.retailor_store_details
+    retailer_stock_records = db.retailer_store_details
     context = {}
     showing_status=[]
     box_ids = []
@@ -716,11 +722,11 @@ def tracking_items(request):
                     traced += trns_data['to_user'].split(',')
                     #flag = 0
                     #new added
-                    retailor_has_data=retailor_stock_records.find_one({'box_id': box_id})
+                    retailer_has_data=retailer_stock_records.find_one({'box_id': box_id})
                     #end added
-                    if retailor_has_data is not None:
+                    if retailer_has_data is not None:
                         flag = 0
-                        for x in retailor_stock_records.find({'box_id': box_id}):
+                        for x in retailer_stock_records.find({'box_id': box_id}):
                             if x['product_status'] == 'IN':
                                 flag = 1
                         if flag == 0:
@@ -741,13 +747,13 @@ def tracking_items(request):
                     name_traced.append(traced[-1])
             if len(name_traced) == 4:
                 context = {'id': ids[0], 'box_id': box_ids[0], 'product_qrcode': '---', 'distiller': name_traced[0],
-                           'distributor': name_traced[1], 'retailor': name_traced[2], 'status': name_traced[3]}
+                           'distributor': name_traced[1], 'retailer': name_traced[2], 'status': name_traced[3]}
             elif len(name_traced) == 3:
                 context = {'id': ids[0], 'box_id': box_ids[0], 'product_qrcode': '---', 'distiller': name_traced[0],
-                           'distributor': name_traced[1], 'retailor': '---', 'status': name_traced[2]}
+                           'distributor': name_traced[1], 'retailer': '---', 'status': name_traced[2]}
             elif len(name_traced) == 2:
                 context = {'id': ids[0], 'box_id': box_ids[0], 'product_qrcode': '---', 'distiller': name_traced[0],
-                           'distributor': '---', 'retailor': '---', 'status': name_traced[1]}
+                           'distributor': '---', 'retailer': '---', 'status': name_traced[1]}
             #print(context)
         elif len(product_id)>0:
             #traced = []
@@ -764,7 +770,7 @@ def tracking_items(request):
                 if trns_data is not None:
                     traced += trns_data['to_user'].split(',')
                     flag = 0
-                    ret_data=retailor_stock_records.find_one({'product_qrcode': product_id})
+                    ret_data=retailer_stock_records.find_one({'product_qrcode': product_id})
                     if ret_data['product_status']=='OUT':
                         traced.append('OUT')
                     else:
@@ -782,13 +788,13 @@ def tracking_items(request):
             #context = {}
             if len(name_traced) == 4:
                 context = {'id': ids[0], 'box_id': box_ids[0], 'product_qrcode': product_id, 'distiller': name_traced[0],
-                           'distributor': name_traced[1], 'retailor': name_traced[2], 'status': name_traced[3]}
+                           'distributor': name_traced[1], 'retailer': name_traced[2], 'status': name_traced[3]}
             elif len(name_traced) == 3:
                 context = {'id': ids[0], 'box_id': box_ids[0], 'product_qrcode': product_id, 'distiller': name_traced[0],
-                           'distributor': name_traced[1], 'retailor': '---', 'status': name_traced[2]}
+                           'distributor': name_traced[1], 'retailer': '---', 'status': name_traced[2]}
             elif len(name_traced) == 2:
                 context = {'id': ids[0], 'box_id': box_ids[0], 'product_qrcode': product_id, 'distiller': name_traced[0],
-                           'distributor': '---', 'retailor': '---', 'status': name_traced[1]}
+                           'distributor': '---', 'retailer': '---', 'status': name_traced[1]}
         #print(f'context for product:{context}')
         if len(box_ids)>0:
             box_temp_data=store_records.find_one({'box_id':box_ids[0]})

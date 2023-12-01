@@ -24,7 +24,7 @@
             </nav>
             {% endif %}
 			
-			{% if request.user.profile.usertype == 'Retailor' %}
+			{% if request.user.profile.usertype == 'Retailer' %}
             <label>SERVER MANAGEMENT</label>
              <nav class="nav flex-column">
               <a href="/transportation/" class="nav-link">Transpotation</a>
@@ -64,13 +64,12 @@
           <div class="az-content-breadcrumb">
             <span>IN STOCK</span>
           </div>
-
           <div class="az-dashboard-one-title">
             <div>
               <h6>Total Products({{total_product}})</h6>
             </div>
             <div class="az-content-header-right">
-              <h6>Total Box({{total_box_in}})</h6>
+              <h6>Total Box({{total_box}})</h6>
             </div>
           </div><!--az-dashboard-one-title-->
 

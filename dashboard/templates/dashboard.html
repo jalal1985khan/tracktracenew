@@ -74,7 +74,7 @@
             <canvas id="myBar" style="width:100%;max-width:500px"></canvas>
               </div></div>
               {% endif %}
-              {% if request.user.profile.usertype == 'Retailor' %}
+              {% if request.user.profile.usertype == 'Retailer' %}
               <div class="col-sm-4 mg-t-20">
                 <div class="card card-dashboard-three">
               <canvas id="myBar" style="width:100%;max-width:500px"></canvas>
@@ -134,7 +134,7 @@
                 </div><!-- card-header -->
                 <div class="card-body">
 
-                  {% for x,y,z in retailor %}
+                  {% for x,y,z in retailer %}
 
                   <div class="az-list-item">
                     <div>
